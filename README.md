@@ -54,55 +54,70 @@ Aquí tienes un ejemplo de cómo usar el programa:
 
 3. **Verificar el Registro**:
     - Abre el archivo `Maquina_de_Turing.txt` para ver los registros del procesamiento.
+  
+## Ejemplos de Cadenas de Entrada
 
-## Estados y Transiciones
+La máquina de Turing acepta cadenas que cumplen con la siguiente estructura: `*|...|*|...|*`, donde cada conjunto de `|` está delimitado por `*`, con un total de tres asteriscos en la cadena. A continuación, se muestran algunos ejemplos de cadenas válidas:
 
-La máquina de Turing implementada tiene los siguientes estados y transiciones para procesar cadenas con la estructura `*|...|*|...|*`:
+- `*|*|*`
+- `*|||*||*`
+- `*||*||||*`
+- `*||||*||||*`
+
+Estos ejemplos siguen la estructura correcta y serán aceptados por la máquina de Turing.
+
+## Estados y Transiciones de la Máquina de Turing
+
+La máquina de Turing implementada en este proyecto tiene 9 estados. A continuación se describe el comportamiento de la máquina para cada estado:
 
 1. **Estado 1**:
-   - **Condición**: Si el símbolo actual es `*`.
-   - **Acción**: Cambia el símbolo a `X`, mueve la cinta a la derecha y cambia al estado 2.
-   - **Transición**: `*` → `X`, mover a la derecha.
+    - **Transición**: Si encuentra un `*`, lo reemplaza por `X`, avanza a la derecha y cambia al estado 2.
+    - **Transición**: Si no encuentra un `*`, la máquina cambia al estado 0 (rechaza la cadena).
 
 2. **Estado 2**:
-   - **Condición**: Si el símbolo actual es `*` o `|`.
-   - **Acción**: Deja el símbolo sin cambios y mueve la cinta a la derecha. Permanece en el estado 2 si el símbolo es `|`, cambia al estado 3 si el símbolo es `*`.
-   - **Transición**: `*` → `*`, `|` → `|`, mover a la derecha.
+    - **Transición**: Si encuentra un `*`, lo mantiene como `*`, avanza a la derecha y cambia al estado 3.
+    - **Transición**: Si encuentra un `|`, lo mantiene como `|`, avanza a la derecha y permanece en el estado 2.
+    - **Transición**: Si no encuentra `*` ni `|`, la máquina cambia al estado 0 (rechaza la cadena).
 
 3. **Estado 3**:
-   - **Condición**: Si el símbolo actual es `*` o `|`.
-   - **Acción**: Cambia el símbolo a `X` si es `*`, mueve la cinta a la izquierda y cambia al estado 4. Deja el símbolo sin cambios y mueve la cinta a la derecha si es `|`.
-   - **Transición**: `*` → `X`, mover a la izquierda; `|` → `|`, mover a la derecha.
+    - **Transición**: Si encuentra un `*`, lo reemplaza por `X`, retrocede a la izquierda y cambia al estado 4.
+    - **Transición**: Si encuentra un `|`, lo mantiene como `|`, avanza a la derecha y permanece en el estado 3.
+    - **Transición**: Si no encuentra `*` ni `|`, la máquina cambia al estado 0 (rechaza la cadena).
 
 4. **Estado 4**:
-   - **Condición**: Si el símbolo actual es `*`, `|`, o `X`.
-   - **Acción**: Cambia el símbolo a `a` si es `|`, mueve la cinta a la derecha y cambia al estado 5. Deja el símbolo sin cambios y mueve la cinta a la izquierda si es `*` o `X`.
-   - **Transición**: `*` → `*`, `|` → `a`, mover a la derecha; `X` → `X`, mover a la izquierda.
+    - **Transición**: Si encuentra un `*`, lo mantiene como `*`, retrocede a la izquierda y permanece en el estado 4.
+    - **Transición**: Si encuentra un `|`, lo reemplaza por `a`, avanza a la derecha y cambia al estado 5.
+    - **Transición**: Si encuentra un `X`, lo mantiene como `X`, avanza a la derecha y cambia al estado 7.
+    - **Transición**: Si no encuentra `*`, `|` ni `X`, la máquina cambia al estado 0 (rechaza la cadena).
 
 5. **Estado 5**:
-   - **Condición**: Si el símbolo actual es `*`, `|`, `X`, o el final de la cadena (`\0`).
-   - **Acción**: Cambia el símbolo a `|` si es `X` o `|`, mueve la cinta a la derecha si es `X` o `|`. Cambia el símbolo a `|` y mueve la cinta a la izquierda si es el final de la cadena.
-   - **Transición**: `*` → `*`, `|` → `|`, `X` → `X`, mover a la derecha; `\0` → `|`, mover a la izquierda.
+    - **Transición**: Si encuentra un `*`, lo mantiene como `*`, avanza a la derecha y permanece en el estado 5.
+    - **Transición**: Si encuentra un `|`, lo mantiene como `|`, avanza a la derecha y permanece en el estado 5.
+    - **Transición**: Si encuentra un `X`, lo mantiene como `X`, avanza a la derecha y permanece en el estado 5.
+    - **Transición**: Si encuentra el final de la cadena (`\0`), reemplaza el carácter con `|`, avanza a la izquierda y cambia al estado 6.
 
 6. **Estado 6**:
-   - **Condición**: Si el símbolo actual es `*`, `|`, `X`, o `a`.
-   - **Acción**: Cambia el símbolo a `|` si es `a`, mueve la cinta a la izquierda y cambia al estado 4. Deja el símbolo sin cambios y mueve la cinta a la izquierda si es `*`, `|`, o `X`.
-   - **Transición**: `*` → `*`, `|` → `|`, `X` → `X`, mover a la izquierda; `a` → `|`, mover a la izquierda.
+    - **Transición**: Si encuentra un `*`, lo mantiene como `*`, retrocede a la izquierda y permanece en el estado 6.
+    - **Transición**: Si encuentra un `|`, lo mantiene como `|`, retrocede a la izquierda y permanece en el estado 6.
+    - **Transición**: Si encuentra un `X`, lo mantiene como `X`, retrocede a la izquierda y permanece en el estado 6.
+    - **Transición**: Si encuentra un `a`, lo reemplaza por `|`, retrocede a la izquierda y cambia al estado 4.
 
 7. **Estado 7**:
-   - **Condición**: Si el símbolo actual es `*` o `|`.
-   - **Acción**: Cambia el símbolo a `*` si es `*`, mueve la cinta a la derecha y cambia al estado 8. Deja el símbolo sin cambios y mueve la cinta a la derecha si es `|`.
-   - **Transición**: `*` → `*`, mover a la derecha; `|` → `|`, mover a la derecha.
+    - **Transición**: Si encuentra un `*`, lo mantiene como `*`, avanza a la derecha y cambia al estado 8.
+    - **Transición**: Si encuentra un `|`, lo mantiene como `|`, avanza a la derecha y permanece en el estado 7.
+    - **Transición**: Si no encuentra `*` ni `|`, la máquina cambia al estado 0 (rechaza la cadena).
 
 8. **Estado 8**:
-   - **Condición**: Si el símbolo actual es `*`, `|`, o el final de la cadena (`\0`).
-   - **Acción**: Cambia el símbolo a `*` si es `X`, mueve la cinta a la derecha y cambia al estado 9. Deja el símbolo sin cambios y mueve la cinta a la derecha si es `|`. Cambia el símbolo a `*` y mueve la cinta a la izquierda si es el final de la cadena.
-   - **Transición**: `X` → `*`, mover a la derecha; `|` → `|`, mover a la derecha; `\0` → `*`, mover a la izquierda.
+    - **Transición**: Si encuentra un `X`, lo reemplaza por `*`, avanza a la derecha y permanece en el estado 8.
+    - **Transición**: Si encuentra un `|`, lo mantiene como `|`, avanza a la derecha y permanece en el estado 8.
+    - **Transición**: Si encuentra el final de la cadena (`\0`), reemplaza el carácter con `*`, avanza a la izquierda y cambia al estado 9.
 
 9. **Estado 9**:
-   - **Condición**: Si el símbolo actual es `*`, `|`, `X`, o el final de la cadena (`\0`).
-   - **Acción**: Cambia el símbolo a `*` si es `X`, mueve la cinta a la izquierda y cambia al estado 9. Deja el símbolo sin cambios y mueve la cinta a la izquierda si es `*`, `|`, o `X`. Imprime "CADENA ACEPTADA" y termina si se encuentra un `X` en el final de la cadena.
-   - **Transición**: `*` → `*`, `|` → `|`, `X` → `*`, mover a la izquierda; `\0` → `X`, aceptar cadena.
+    - **Transición**: Si encuentra un `*`, lo mantiene como `*`, retrocede a la izquierda y permanece en el estado 9.
+    - **Transición**: Si encuentra un `|`, lo mantiene como `|`, retrocede a la izquierda y permanece en el estado 9.
+    - **Transición**: Si encuentra un `X`, lo reemplaza por `*`, acepta la cadena y permanece en el estado 9.
+
+Si la cadena no es aceptada, el estado cambia al 0 y la máquina rechaza la cadena.
 
 ## Archivos del Proyecto
 
